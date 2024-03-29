@@ -6,5 +6,9 @@ interface PrimaryButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export const PrimaryButton = ({ children, ...props }: PrimaryButtonProps) => {
-  return <S.Button {...props}>{children}</S.Button>;
+  return (
+    <S.Button data-testid="primary-button" {...props}>
+      {children}
+    </S.Button>
+  );
 };

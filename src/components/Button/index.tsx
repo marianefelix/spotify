@@ -1,8 +1,8 @@
-import { ButtonHTMLAttributes } from 'react';
+import { ButtonHTMLAttributes, ReactNode } from 'react';
 import * as S from './style';
 
 interface PrimaryButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  children: string;
+  children: ReactNode;
 }
 
 export const PrimaryButton = ({ children, ...props }: PrimaryButtonProps) => {

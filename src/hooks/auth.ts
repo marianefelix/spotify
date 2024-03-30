@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { Buffer } from 'buffer';
 import * as queryParser from 'qs';
-import { useLocation } from 'react-router-dom';
+import { redirect, useSearchParams } from 'react-router-dom';
+import { authStore } from '../store/authentication';
 
 interface TokenResponse {
   access_token: string;
@@ -11,11 +12,17 @@ interface TokenResponse {
   token_type: string;
 }
 
-export const useAuthentication = () => {
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
+export interface UseAuthenticationData {
+  authorization: () => void;
+  authenticate: (code: string) => Promise<void>;
+  getAuthCode: () => string | null;
+}
 
-  const authorization = async () => {
+export const useAuth = (): UseAuthenticationData => {
+  const [queryParameters] = useSearchParams();
+  const authCode = queryParameters.get('code');
+
+  const authorization = () => {
     const scope = 'user-read-private user-read-email';
     const requestParams = {
       response_type: 'code',
@@ -28,17 +35,11 @@ export const useAuthentication = () => {
     const singinURL = `${import.meta.env.VITE_SPOTIFY_AUTH_URL}?${parsedParams}`;
 
     window.open(singinURL, '_self');
-
-    const authCode = searchParams.get('code');
-
-    if (authCode) {
-      await authenticate(authCode);
-    } else {
-      // error
-    }
   };
 
   const authenticate = async (code: string) => {
+    authStore.setIsLoading(true);
+
     try {
       const body = {
         code: code,
@@ -63,11 +64,18 @@ export const useAuthentication = () => {
         }
       );
 
-      // save token
+      authStore.setAuthenticated(true);
+      authStore.setToken(response.data.access_token);
     } catch (err) {
-      // error
+      redirect('/login');
+    } finally {
+      authStore.setIsLoading(false);
     }
   };
 
-  return { authorization };
+  const getAuthCode = () => {
+    return authCode;
+  };
+
+  return { authorization, authenticate, getAuthCode };
 };

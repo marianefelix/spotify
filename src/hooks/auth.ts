@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Buffer } from 'buffer';
 import * as queryParser from 'qs';
-import { redirect, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { authStore } from '../store/authentication';
 
 interface TokenResponse {
@@ -20,6 +20,7 @@ export interface UseAuthenticationData {
 
 export const useAuth = (): UseAuthenticationData => {
   const [queryParameters] = useSearchParams();
+  const navigate = useNavigate();
   const authCode = queryParameters.get('code');
 
   const authorization = () => {
@@ -67,7 +68,7 @@ export const useAuth = (): UseAuthenticationData => {
       authStore.setAuthenticated(true);
       authStore.setToken(response.data.access_token);
     } catch (err) {
-      redirect('/login');
+      navigate('/login');
     } finally {
       authStore.setIsLoading(false);
     }

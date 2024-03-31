@@ -2,13 +2,13 @@ import { Artist } from '../../../models/artist';
 import { ArtistCard } from '../Card';
 import * as S from './style';
 
-interface ArtistContainerProps {
+interface ArtistListProps {
   artists?: Artist[];
 }
 
-export const ArtistContainer = ({ artists }: ArtistContainerProps) => {
+export const ArtistList = ({ artists }: ArtistListProps) => {
   return (
-    <S.Container>
+    <S.Container data-testid="artist-list">
       {artists?.map((artistItem) => (
         <ArtistCard
           key={artistItem.id}

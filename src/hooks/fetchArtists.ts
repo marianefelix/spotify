@@ -29,7 +29,7 @@ export const useFetchArtists = () => {
         time_range: 'short_term',
       };
 
-      const { response, error } = await fetchData<TopArtistsResponse>('/me/top/artists/a', {
+      const { response, error } = await fetchData<TopArtistsResponse>('/me/top/artists', {
         params,
       });
 

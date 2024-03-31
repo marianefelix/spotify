@@ -24,7 +24,7 @@ export const useAuth = (): UseAuthenticationData => {
   const authCode = queryParameters.get('code');
 
   const authorization = () => {
-    const scope = 'user-read-private user-read-email';
+    const scope = 'user-read-private user-read-email user-top-read';
     const requestParams = {
       response_type: 'code',
       client_id: import.meta.env.VITE_SPOTIFY_CLIENT_ID,

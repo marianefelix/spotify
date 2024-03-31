@@ -4,26 +4,17 @@ import useFetch from '../../hooks/fetch';
 import { User } from '../../models/user';
 import { observer } from 'mobx-react';
 import { userStore } from '../../store/user';
-import * as S from './style';
+import { Header } from '../../components/Layout/Header';
+import { ArtistContainer } from '../../components/Artist/Container';
+import { useFetchArtists } from '../../hooks/fetchArtists';
+import { getCurrentTime } from '../../utils/currentTime';
 
 export const Home = observer(() => {
   const { fetchData } = useFetch();
-
-  const getTime = () => {
-    const today = new Date();
-    const currentHour = today.getHours();
-
-    if (currentHour < 12) {
-      return 'Bom dia';
-    } else if (currentHour < 18) {
-      return 'Boa tarde';
-    } else {
-      return 'Boa noite';
-    }
-  };
+  const { fetchTopArtits } = useFetchArtists();
 
   useEffect(() => {
-    const handleFetchData = async () => {
+    const handleFetchUserData = async () => {
       const { response, error } = await fetchData<User>('/me');
 
       if (response !== null) {
@@ -32,14 +23,30 @@ export const Home = observer(() => {
       }
     };
 
-    handleFetchData();
-  }, [fetchData]);
+    handleFetchUserData();
+    fetchTopArtits(5);
+  }, [fetchData, fetchTopArtits]);
+
+  const getTopFiveArtists = () => {
+    if (userStore.topArtits !== null) {
+      const topFiveArtists = userStore.topArtits.slice(0, 5);
+      return topFiveArtists;
+    }
+
+    return;
+  };
+
+  const getTitle = () => {
+    return `${getCurrentTime()} ${userStore.data?.display_name ?? ''}!`;
+  };
 
   return (
     <Layout>
-      <S.GreetingText>
-        {getTime()}, {userStore.data?.display_name}!
-      </S.GreetingText>
+      <Header
+        title={getTitle()}
+        description="Seu top 5 artistas mais ouvidos nas últimas semanas"
+      />
+      <ArtistContainer artists={getTopFiveArtists()} />
     </Layout>
   );
 });

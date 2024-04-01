@@ -79,8 +79,6 @@ export const useAuth = (): UseAuthenticationData => {
 
   const refreshToken = useCallback(
     async (refreshToken: string | null) => {
-      authStore.setIsLoading(true);
-
       try {
         const body = {
           grant_type: 'refresh_token',
@@ -104,8 +102,6 @@ export const useAuth = (): UseAuthenticationData => {
         authStore.setRefreshToken(response.data.refresh_token);
       } catch (err) {
         navigate('/login');
-      } finally {
-        authStore.setIsLoading(false);
       }
     },
     [navigate]

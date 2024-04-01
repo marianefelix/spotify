@@ -1,49 +1,55 @@
 import { useCallback, useState } from 'react';
 import api from '../services/api';
 import { authStore } from '../store/authentication';
-import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { useAuth } from './auth';
+import { AxiosRequestConfig, AxiosResponse } from 'axios';
+import { redirect } from 'react-router-dom';
+
+interface Error {
+  status: number;
+  message: string;
+}
 
 const useFetch = () => {
-  const { refreshToken } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
 
-  const fetchData = useCallback(
-    async <T>(url: string, options?: AxiosRequestConfig) => {
-      setIsLoading(true);
-      let response = null as AxiosResponse<T, unknown> | null;
-      let error = null as AxiosError | null;
+  const fetchData = useCallback(async <T>(url: string, options?: AxiosRequestConfig) => {
+    setIsLoading(true);
+    let response = null as AxiosResponse<T, unknown> | null;
+    let error = null as Error | null;
 
-      try {
-        api.interceptors.request.use(
-          (config) => {
-            const token = authStore.getToken();
+    try {
+      api.interceptors.request.use(
+        (config) => {
+          const token = authStore.getToken();
 
-            if (token) {
-              config.headers.Authorization = `Bearer ${token}`;
-            }
+          if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+          }
 
-            return config;
-          },
+          return config;
+        },
 
-          (error) => Promise.reject(error)
-        );
+        (error) => Promise.reject(error)
+      );
 
-        response = await api.get<T>(url, options);
-      } catch (err) {
-        error = err as AxiosError;
+      response = await api.get<T>(url, options);
+    } catch (err) {
+      const errorResponse = err as {
+        response: Error;
+      };
 
-        if (error.status === 401) {
-          refreshToken(authStore.getRefreshToken());
-        }
+      error = errorResponse.response;
+
+      if (error.status === 401) {
+        authStore.clearAll();
+        redirect('/login');
       }
+    }
 
-      setIsLoading(false);
+    setIsLoading(false);
 
-      return { response, error };
-    },
-    [refreshToken]
-  );
+    return { response, error };
+  }, []);
 
   return { fetchData, isLoading };
 };

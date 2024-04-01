@@ -9,7 +9,7 @@ export const ArtistCard = ({ id, name, avatarURL, genres }: ArtistCardProps) => 
   const navigate = useNavigate();
 
   const handleOnClick = () => {
-    navigate(`/artist/${id}`);
+    navigate(`/artists/${id}`);
   };
 
   return (

@@ -8,6 +8,7 @@ import { Header } from '../../components/Layout/Header';
 import { ArtistList } from '../../components/Artist/List';
 import { useFetchArtists } from '../../hooks/fetchArtists';
 import { getCurrentTime } from '../../utils/currentTime';
+import { Artist } from '../../models/artist';
 
 export const Home = observer(() => {
   const { fetchData } = useFetch();
@@ -24,7 +25,7 @@ export const Home = observer(() => {
     };
 
     handleFetchUserData();
-    fetchTopArtits(5);
+    fetchTopArtits(5, (data: Artist[]) => userStore.setTopArtits(data));
   }, [fetchData, fetchTopArtits]);
 
   const getTopFiveArtists = () => {

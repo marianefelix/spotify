@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Layout } from '../../components/Layout';
 import { Header } from '../../components/Layout/Header';
 import { ArtistList } from '../../components/Artist/List';
@@ -8,7 +8,7 @@ import { userStore } from '../../store/user';
 import { Artist } from '../../models/artist';
 
 export const Artists = observer(() => {
-  const { fetchTopArtits, isLoading } = useFetchArtists();
+  const { fetchTopArtits } = useFetchArtists();
 
   useEffect(() => {
     fetchTopArtits(10, (data: Artist[]) => userStore.setAllArtists(data));

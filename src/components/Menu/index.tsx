@@ -9,9 +9,9 @@ interface MenuProps {
 
 export const Menu = ({ items, footerItem }: MenuProps) => {
   return (
-    <S.Nav>
+    <S.Nav data-testid="menu">
       <Logo />
-      <S.ItemsContainer>
+      <S.ItemsContainer data-testid="main-items">
         {items.map((item) => (
           <Item id={item.id} key={item.id} title={item.title} icon={item.icon} to={item.to} />
         ))}

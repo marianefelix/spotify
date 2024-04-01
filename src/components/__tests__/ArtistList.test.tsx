@@ -6,13 +6,13 @@ import { ArtistList } from '../Artist/List';
 describe('<ArtistCard />', () => {
   const artistList: Artist[] = [
     {
-      id: 'DPR IAN',
+      id: 'DPR-IAN-1',
       name: 'DPR IAN',
       avatarURL: 'https://i.scdn.co/image/ab6761610000e5ebe7cf64e17ae7a7ea4173f5ea',
       genres: ['k-rap', 'k-r&b'],
     },
     {
-      id: 'DPR IAN',
+      id: 'DPR-IAN-2',
       name: 'DPR IAN',
       avatarURL: 'https://i.scdn.co/image/ab6761610000e5ebe7cf64e17ae7a7ea4173f5ea',
       genres: ['k-rap', 'k-r&b'],
@@ -36,7 +36,10 @@ describe('<ArtistCard />', () => {
   });
 
   it('Should render a list of 3 artists', () => {
-    const newItem = artistList[0];
+    const newItem = {
+      ...artistList[0],
+      id: 'DPR-IAN-3',
+    };
     artistList.push(newItem);
 
     render(<ArtistList artists={artistList} />);

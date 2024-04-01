@@ -6,6 +6,7 @@ export const HomeIcon = ({ id }: HomeIconProps) => {
   return (
     <svg
       id={id}
+      data-testid={id}
       width="24"
       height="27"
       viewBox="0 0 24 27"

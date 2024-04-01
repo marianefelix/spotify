@@ -6,6 +6,7 @@ export const DownloadIcon = ({ id }: DownloadIconProps) => {
   return (
     <svg
       id={id}
+      data-testid={id}
       width="24"
       height="25"
       viewBox="0 0 24 25"

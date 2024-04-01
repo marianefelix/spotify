@@ -12,7 +12,7 @@ export interface ItemProps {
 
 export const Item = observer(({ id, title, icon, to }: ItemProps) => {
   const navigate = useNavigate();
-  const isSelected = applicationStore.currentPage === to;
+  const isSelected = applicationStore.currentPage.includes(to);
 
   const handleOnClick = () => {
     navigate(to);

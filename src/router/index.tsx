@@ -4,6 +4,8 @@ import { Home } from '../pages/Home';
 import { Authenticator } from '../pages/Authenticator';
 import { PrivateRoute } from './PrivateRoute';
 import { CustomRoute } from './CutomLoginRoute/inde';
+import { Artists } from '../pages/Artists';
+import { ArtistDetails } from '../pages/Artists/ArtistDetails';
 
 export const router = createBrowserRouter([
   {
@@ -24,6 +26,22 @@ export const router = createBrowserRouter([
     element: (
       <PrivateRoute>
         <Home />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: '/artists',
+    element: (
+      <PrivateRoute>
+        <Artists />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: '/artists/:id',
+    element: (
+      <PrivateRoute>
+        <ArtistDetails />
       </PrivateRoute>
     ),
   },

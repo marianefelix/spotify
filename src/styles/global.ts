@@ -15,7 +15,7 @@ export const GlobalStyle = createGlobalStyle`
     font-size: 100%;
   }
 
-  button {
+  button, a {
     cursor: pointer;
     border: 0;
   }

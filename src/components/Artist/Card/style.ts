@@ -1,8 +1,21 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-  min-width: 40%;
+  height: 80px;
 
+  display: flex;
+  align-items: center;
+
+  cursor: pointer;
+
+  &:hover > a svg {
+    visibility: visible;
+  }
+
+  justify-content: space-between;
+`;
+
+export const ArtistBox = styled.div`
   display: flex;
   align-items: center;
   gap: 16px;
@@ -33,4 +46,10 @@ export const ArtistName = styled.p`
 export const GenreListText = styled.p`
   font-size: ${({ theme }) => theme.font.size.xs};
   font-weight: ${({ theme }) => theme.font.weight.regular};
+`;
+
+export const ViewLink = styled.a`
+  svg {
+    visibility: hidden;
+  }
 `;

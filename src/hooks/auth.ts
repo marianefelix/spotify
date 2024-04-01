@@ -3,6 +3,7 @@ import { Buffer } from 'buffer';
 import * as queryParser from 'qs';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { authStore } from '../store/authentication';
+import { useCallback } from 'react';
 
 interface TokenResponse {
   access_token: string;
@@ -15,6 +16,7 @@ interface TokenResponse {
 export interface UseAuthenticationData {
   authorization: () => void;
   authenticate: (code: string) => Promise<void>;
+  refreshToken: (refreshToken: string | null) => Promise<void>;
   getAuthCode: () => string | null;
 }
 
@@ -25,6 +27,7 @@ export const useAuth = (): UseAuthenticationData => {
 
   const authorization = () => {
     const scope = 'user-read-private user-read-email user-top-read';
+
     const requestParams = {
       response_type: 'code',
       client_id: import.meta.env.VITE_SPOTIFY_CLIENT_ID,
@@ -65,8 +68,8 @@ export const useAuth = (): UseAuthenticationData => {
         }
       );
 
-      authStore.setAuthenticated(true);
       authStore.setToken(response.data.access_token);
+      authStore.setRefreshToken(response.data.refresh_token);
     } catch (err) {
       navigate('/login');
     } finally {
@@ -74,9 +77,39 @@ export const useAuth = (): UseAuthenticationData => {
     }
   };
 
+  const refreshToken = useCallback(
+    async (refreshToken: string | null) => {
+      try {
+        const body = {
+          grant_type: 'refresh_token',
+          refres_token: refreshToken,
+          client_id: import.meta.env.VITE_SPOTIFY_CLIENT_ID,
+        };
+
+        const headers = {
+          'content-type': 'application/x-www-form-urlencoded',
+        };
+
+        const response = await axios.post<TokenResponse>(
+          import.meta.env.VITE_SPOTIFY_TOKEN_URL,
+          body,
+          {
+            headers,
+          }
+        );
+
+        authStore.setToken(response.data.access_token);
+        authStore.setRefreshToken(response.data.refresh_token);
+      } catch (err) {
+        navigate('/login');
+      }
+    },
+    [navigate]
+  );
+
   const getAuthCode = () => {
     return authCode;
   };
 
-  return { authorization, authenticate, getAuthCode };
+  return { authorization, authenticate, refreshToken, getAuthCode };
 };

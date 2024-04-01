@@ -1,38 +1,75 @@
 import { makeAutoObservable } from 'mobx';
-import Cookies from 'js-cookie';
 import { makePersistable } from 'mobx-persist-store';
 
-export class AuthenticationStore {
-  authenticated = false;
+interface AuthenticationStoreI {
+  token: string;
+  refreshToken: string;
+  isLoading: boolean;
+}
+
+export class AuthenticationStore implements AuthenticationStoreI {
+  token = '';
+  refreshToken = '';
   isLoading = false;
 
   constructor() {
     makeAutoObservable(this);
     makePersistable(this, {
       name: 'AuthStore',
-      properties: ['authenticated'],
+      properties: ['token', 'refreshToken'],
       storage: window.localStorage,
     });
   }
 
   setToken(token: string) {
-    Cookies.set('access_token', token, { secure: true });
+    this.token = token;
+  }
+
+  private getAuthStore() {
+    const authStore = localStorage.getItem('AuthStore');
+    if (authStore) {
+      const authStoreParsed = Object.assign(this, JSON.parse(authStore)) as AuthenticationStoreI;
+
+      return authStoreParsed;
+    }
+
+    return null;
   }
 
   getToken() {
-    return Cookies.get('access_token');
+    const authStore = this.getAuthStore();
+
+    if (authStore !== null) {
+      return authStore.token;
+    }
+
+    return null;
   }
 
-  clearToken() {
-    Cookies.remove('access_token');
+  setRefreshToken(refreshToken: string) {
+    this.refreshToken = refreshToken;
   }
 
-  setAuthenticated(value: boolean) {
-    this.authenticated = value;
+  getRefreshToken() {
+    const authStore = this.getAuthStore();
+
+    if (authStore !== null) {
+      return authStore.refreshToken;
+    }
+
+    return null;
+  }
+
+  clearAll() {
+    localStorage.removeItem('AuthStore');
   }
 
   getAuthenticated() {
-    return this.authenticated;
+    if (this.getToken() !== '') {
+      return true;
+    }
+
+    return false;
   }
 
   setIsLoading(value: boolean) {
@@ -42,8 +79,6 @@ export class AuthenticationStore {
   getIsLoading() {
     return this.isLoading;
   }
-
-  clearIsLoading() {}
 }
 
 export const authStore = new AuthenticationStore();

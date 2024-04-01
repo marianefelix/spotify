@@ -1,10 +1,11 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { Artist } from '../models/artist';
 import { userStore } from '../store/user';
 import useFetch from './fetch';
 import { Bounce, toast } from 'react-toastify';
 
 interface TopArtistsResponse {
+  next: string | null;
   items: [
     {
       id: string;
@@ -20,12 +21,13 @@ interface TopArtistsResponse {
 }
 
 export const useFetchArtists = () => {
-  const { fetchData } = useFetch();
+  const { fetchData, isLoading } = useFetch();
 
   const fetchTopArtits = useCallback(
-    async (limit: number) => {
+    async (limit: number, setData: (data: Artist[]) => void) => {
       const params = {
         limit,
+        // offset: 0,
         time_range: 'short_term',
       };
 
@@ -45,8 +47,7 @@ export const useFetchArtists = () => {
           });
         });
 
-        userStore.setTopArtits(topArtits);
-        return;
+        setData(topArtits);
       }
 
       if (error !== null) {
@@ -69,5 +70,5 @@ export const useFetchArtists = () => {
     [fetchData]
   );
 
-  return { fetchTopArtits };
+  return { fetchTopArtits, isLoading };
 };

@@ -10,6 +10,7 @@ import { ArtistAlbum } from '../../../models/artistAlbum';
 import { Artist } from '../../../models/artist';
 import { formatDate } from '../../../utils/formatDate';
 import { GenericCard } from '../../../components/GenericCard';
+import { Main } from '../../../components/Layout/Main';
 
 interface ArtistAlbumsResponse {
   items: {
@@ -82,7 +83,7 @@ export const ArtistDetails = observer(() => {
           alt={`Imagem do artista ${artistData?.name}`}
         />
       </S.Header>
-      <S.MainContent>
+      <Main>
         {userStore.artistAlbums.map((album) => (
           <GenericCard
             key={album.id}
@@ -93,7 +94,7 @@ export const ArtistDetails = observer(() => {
             description={album.releaseDate}
           />
         ))}
-      </S.MainContent>
+      </Main>
     </Layout>
   );
 });

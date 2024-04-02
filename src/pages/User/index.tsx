@@ -18,7 +18,10 @@ export const User = observer(() => {
     <Layout>
       <S.MainContent>
         <img src={userStore.data?.avatarURL} alt="Sua foto de perfil" />
-        <S.Name>{userStore.data?.display_name}</S.Name>
+        <S.TextBox>
+          <S.Name>{userStore.data?.display_name}</S.Name>
+          <S.EmailText>{userStore.data?.email}</S.EmailText>
+        </S.TextBox>
         <PrimaryButton onClick={handleLogout}>Sair</PrimaryButton>
       </S.MainContent>
     </Layout>

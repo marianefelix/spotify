@@ -1,10 +1,14 @@
 import styled from 'styled-components';
 
-export const OverlayContainer = styled.div`
+interface OverlayContainerType {
+  $isOpen: boolean;
+}
+
+export const OverlayContainer = styled.div<OverlayContainerType>`
   width: 100%;
   height: 100%;
 
-  display: flex;
+  display: ${(props) => (props.$isOpen ? 'flex' : 'none')};
   align-items: center;
   justify-content: center;
 

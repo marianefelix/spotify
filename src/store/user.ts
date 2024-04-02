@@ -3,12 +3,14 @@ import { User } from '../models/user';
 import { Artist } from '../models/artist';
 import { makePersistable } from 'mobx-persist-store';
 import { ArtistAlbum } from '../models/artistAlbum';
+import { Playlist } from '../models/playlist';
 
 export class UserStore {
   data = {} as User | null;
   topArtits = [] as Artist[];
   allArtits = [] as Artist[];
   artistAlbums = [] as ArtistAlbum[];
+  playlists = [] as Playlist[];
 
   constructor() {
     makeAutoObservable(this);
@@ -49,6 +51,14 @@ export class UserStore {
 
   getArtistAlbums() {
     return this.artistAlbums;
+  }
+
+  setPlaylists(playlists: Playlist[]) {
+    this.playlists = playlists;
+  }
+
+  getPlaylists() {
+    return this.playlists;
   }
 }
 

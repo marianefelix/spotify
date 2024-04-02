@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const Container = styled.div`
+export const MainContent = styled.main`
   width: 90%;
   max-height: 85%;
 

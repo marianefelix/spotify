@@ -1,6 +1,7 @@
 interface DiscIconProps {
   id: string;
 }
+
 export const DiscIcon = ({ id }: DiscIconProps) => {
   return (
     <svg

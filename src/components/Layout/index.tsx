@@ -41,7 +41,7 @@ export const Layout = ({ children }: LayoutProps) => {
       id: 'playlist-item',
       title: 'Playlist',
       icon: <PlayIcon id="playlist-icon" />,
-      to: '/playlist',
+      to: '/playlists',
     },
     {
       id: 'user-item',

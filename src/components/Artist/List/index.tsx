@@ -1,6 +1,6 @@
 import { Artist } from '../../../models/artist';
+import { Main } from '../../Layout/Main';
 import { ArtistCard } from '../Card';
-import * as S from './style';
 
 interface ArtistListProps {
   artists?: Artist[];
@@ -8,7 +8,7 @@ interface ArtistListProps {
 
 export const ArtistList = ({ artists }: ArtistListProps) => {
   return (
-    <S.Container data-testid="artist-list">
+    <Main data-testid="artist-list">
       {artists?.map((artistItem) => (
         <ArtistCard
           key={artistItem.id}
@@ -18,6 +18,6 @@ export const ArtistList = ({ artists }: ArtistListProps) => {
           genres={artistItem.genres}
         />
       ))}
-    </S.Container>
+    </Main>
   );
 };

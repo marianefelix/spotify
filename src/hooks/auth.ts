@@ -26,7 +26,8 @@ export const useAuth = (): UseAuthenticationData => {
   const authCode = queryParameters.get('code');
 
   const authorization = () => {
-    const scope = 'user-read-private user-read-email user-top-read';
+    const scope =
+      'user-read-private user-read-email user-top-read playlist-modify-public playlist-modify-private playlist-read-private';
 
     const requestParams = {
       response_type: 'code',

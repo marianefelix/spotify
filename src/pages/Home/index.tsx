@@ -9,6 +9,7 @@ import { ArtistList } from '../../components/Artist/List';
 import { useFetchArtists } from '../../hooks/fetchArtists';
 import { getCurrentTime } from '../../utils/currentTime';
 import { Artist } from '../../models/artist';
+import { LoadingSpinner } from '../../components/LoadingSpinner';
 
 interface UserResponse {
   id: string;
@@ -20,8 +21,8 @@ interface UserResponse {
 }
 
 export const Home = observer(() => {
-  const { fetchData } = useFetch();
-  const { fetchTopArtits } = useFetchArtists();
+  const { fetchData, isLoading: fetchingUserData } = useFetch();
+  const { fetchTopArtits, isLoading: fetchingTopArtists } = useFetchArtists();
 
   const getUserDataParsed = (data: UserResponse) => {
     const userData = {
@@ -77,7 +78,11 @@ export const Home = observer(() => {
         title={getTitle()}
         description="Seu top 5 artistas mais ouvidos nas últimas semanas"
       />
-      <ArtistList artists={getTopFiveArtists()} />
+      {fetchingUserData || fetchingTopArtists ? (
+        <LoadingSpinner />
+      ) : (
+        <ArtistList artists={getTopFiveArtists()} />
+      )}
     </Layout>
   );
 });

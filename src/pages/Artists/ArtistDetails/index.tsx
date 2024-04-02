@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { Fragment, useCallback, useEffect } from 'react';
 import { Layout } from '../../../components/Layout';
 import { ArrowLeftIcon } from '../../../components/icons/Arrow/Left';
 import * as S from './style';
@@ -12,6 +12,7 @@ import { GenericCard } from '../../../components/GenericCard';
 import { Main } from '../../../components/Layout/Main';
 import { Paginated, usePagination } from '../../../hooks/pagination';
 import { Pagination } from '../../../components/Pagination';
+import { LoadingSpinner } from '../../../components/LoadingSpinner';
 
 interface ArtistAlbumsResponse extends Paginated {
   items: {
@@ -26,7 +27,7 @@ interface ArtistAlbumsResponse extends Paginated {
 
 export const ArtistDetails = observer(() => {
   const artist = useParams();
-  const { fetchData } = useFetch();
+  const { fetchData, isLoading } = useFetch();
   const { offset, totalPages, currentPage, handleChangePage, handleSetTotalPages, DEFAULT_LIMIT } =
     usePagination();
   const navigate = useNavigate();
@@ -90,23 +91,29 @@ export const ArtistDetails = observer(() => {
           alt={`Imagem do artista ${artistData?.name}`}
         />
       </S.Header>
-      <Main>
-        {userStore.getArtistAlbums().map((album) => (
-          <GenericCard
-            key={album.id}
-            id={album.id}
-            title={album.name}
-            imageURL={album.imageURL}
-            imageAlt="Capa do álbum"
-            description={album.releaseDate}
+      {isLoading ? (
+        <LoadingSpinner />
+      ) : (
+        <Fragment>
+          <Main>
+            {userStore.getArtistAlbums().map((album) => (
+              <GenericCard
+                key={album.id}
+                id={album.id}
+                title={album.name}
+                imageURL={album.imageURL}
+                imageAlt="Capa do álbum"
+                description={album.releaseDate}
+              />
+            ))}
+          </Main>
+          <Pagination
+            totalPages={totalPages}
+            currentPage={currentPage}
+            handleChangePage={handleChangePage}
           />
-        ))}
-      </Main>
-      <Pagination
-        totalPages={totalPages}
-        currentPage={currentPage}
-        handleChangePage={handleChangePage}
-      />
+        </Fragment>
+      )}
     </Layout>
   );
 });

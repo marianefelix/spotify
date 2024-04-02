@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { Fragment, useCallback, useEffect, useState } from 'react';
 import { PrimaryButton } from '../../components/Button';
 import { Layout } from '../../components/Layout';
 import { Header } from '../../components/Layout/Header';
@@ -13,6 +13,7 @@ import { useCreate } from '../../hooks/create';
 import { Bounce, toast } from 'react-toastify';
 import { Pagination } from '../../components/Pagination';
 import { Paginated, usePagination } from '../../hooks/pagination';
+import { LoadingSpinner } from '../../components/LoadingSpinner';
 
 interface PlaylistItemResponse {
   id: string;
@@ -29,7 +30,7 @@ interface PlaylistsResponse extends Paginated {
 }
 
 export const Playlists = observer(() => {
-  const { fetchData } = useFetch();
+  const { fetchData, isLoading } = useFetch();
   const { create, isLoading: isCreatingPlaylist } = useCreate();
   const { offset, totalPages, currentPage, handleChangePage, handleSetTotalPages, DEFAULT_LIMIT } =
     usePagination();
@@ -123,18 +124,30 @@ export const Playlists = observer(() => {
       <Header title="Minhas Playlists" description="Sua coleção pessoal de playlists">
         <PrimaryButton onClick={() => handlePlaylistModalOpen(true)}>Criar playlist</PrimaryButton>
       </Header>
-      <Main>
-        {userStore.getPlaylists().map((playlist) => (
-          <GenericCard
-            key={playlist.id}
-            id={playlist.id}
-            title={playlist.name}
-            imageURL={playlist.imageURL}
-            imageAlt="Imagem da playlist"
-            description={playlist.description}
+      {isLoading ? (
+        <LoadingSpinner />
+      ) : (
+        <Fragment>
+          <Main>
+            {userStore.getPlaylists().map((playlist) => (
+              <GenericCard
+                key={playlist.id}
+                id={playlist.id}
+                title={playlist.name}
+                imageURL={playlist.imageURL}
+                imageAlt="Imagem da playlist"
+                description={playlist.description}
+              />
+            ))}
+          </Main>
+          <Pagination
+            totalPages={totalPages}
+            currentPage={currentPage}
+            handleChangePage={handleChangePage}
           />
-        ))}
-      </Main>
+        </Fragment>
+      )}
+
       <PlaylistModal
         isOpen={isPlaylistModalOpen}
         inputValue={modalInputValue}
@@ -142,11 +155,6 @@ export const Playlists = observer(() => {
         handleInputOnChange={handleModalInputChange}
         handleCreatePlaylist={handleCreatePlaylist}
         isLoading={isCreatingPlaylist}
-      />
-      <Pagination
-        totalPages={totalPages}
-        currentPage={currentPage}
-        handleChangePage={handleChangePage}
       />
     </Layout>
   );

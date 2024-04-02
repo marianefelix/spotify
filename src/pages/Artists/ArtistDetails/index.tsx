@@ -6,10 +6,10 @@ import useFetch from '../../../hooks/fetch';
 import { useNavigate, useParams } from 'react-router-dom';
 import { observer } from 'mobx-react';
 import { userStore } from '../../../store/user';
-import { Album } from './Album';
 import { ArtistAlbum } from '../../../models/artistAlbum';
 import { Artist } from '../../../models/artist';
 import { formatDate } from '../../../utils/formatDate';
+import { GenericCard } from '../../../components/GenericCard';
 
 interface ArtistAlbumsResponse {
   items: {
@@ -84,12 +84,13 @@ export const ArtistDetails = observer(() => {
       </S.Header>
       <S.MainContent>
         {userStore.artistAlbums.map((album) => (
-          <Album
+          <GenericCard
             key={album.id}
             id={album.id}
-            name={album.name}
+            title={album.name}
             imageURL={album.imageURL}
-            releaseDate={album.releaseDate}
+            imageAlt="Capa do álbum"
+            description={album.releaseDate}
           />
         ))}
       </S.MainContent>

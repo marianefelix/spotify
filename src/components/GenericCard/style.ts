@@ -22,7 +22,7 @@ export const Title = styled.p`
   line-height: 20px;
 `;
 
-export const DateText = styled.p`
+export const Description = styled.p`
   color: ${({ theme }) => theme.color.white};
 
   font-size: ${({ theme }) => theme.font.size.xs};

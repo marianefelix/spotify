@@ -128,7 +128,7 @@ export const Playlists = observer(() => {
         <LoadingSpinner />
       ) : (
         <Fragment>
-          <Main>
+          <Main id="playlists-main">
             {userStore.getPlaylists().map((playlist) => (
               <GenericCard
                 key={playlist.id}

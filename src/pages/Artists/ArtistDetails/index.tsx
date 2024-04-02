@@ -95,7 +95,7 @@ export const ArtistDetails = observer(() => {
         <LoadingSpinner />
       ) : (
         <Fragment>
-          <Main>
+          <Main id="artist-details-main">
             {userStore.getArtistAlbums().map((album) => (
               <GenericCard
                 key={album.id}

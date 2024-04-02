@@ -25,7 +25,7 @@ export const useAuth = (): UseAuthenticationData => {
   const navigate = useNavigate();
   const authCode = queryParameters.get('code');
 
-  const authorization = () => {
+  const authorization = useCallback(() => {
     const scope =
       'user-read-private user-read-email user-top-read playlist-modify-public playlist-modify-private playlist-read-private';
 
@@ -40,43 +40,45 @@ export const useAuth = (): UseAuthenticationData => {
     const singinURL = `${import.meta.env.VITE_SPOTIFY_AUTH_URL}?${parsedParams}`;
 
     window.open(singinURL, '_self');
-  };
+  }, []);
 
-  const authenticate = async (code: string) => {
-    authStore.setIsLoading(true);
+  const authenticate = useCallback(
+    async (code: string) => {
+      authStore.setIsLoading(true);
 
-    try {
-      const body = {
-        code: code,
-        grant_type: 'authorization_code',
-        redirect_uri: import.meta.env.VITE_REDIRECT_URI,
-      };
+      try {
+        const body = {
+          code: code,
+          grant_type: 'authorization_code',
+          redirect_uri: import.meta.env.VITE_REDIRECT_URI,
+        };
 
-      const encodedClient = Buffer.from(
-        import.meta.env.VITE_SPOTIFY_CLIENT_ID + ':' + import.meta.env.VITE_SPOTIFY_CLIENT_SECRET
-      ).toString('base64');
+        const encodedClient = Buffer.from(
+          import.meta.env.VITE_SPOTIFY_CLIENT_ID + ':' + import.meta.env.VITE_SPOTIFY_CLIENT_SECRET
+        ).toString('base64');
 
-      const headers = {
-        'content-type': 'application/x-www-form-urlencoded',
-        Authorization: `Basic ${encodedClient}`,
-      };
+        const headers = {
+          'content-type': 'application/x-www-form-urlencoded',
+          Authorization: `Basic ${encodedClient}`,
+        };
 
-      const response = await axios.post<TokenResponse>(
-        import.meta.env.VITE_SPOTIFY_TOKEN_URL,
-        body,
-        {
-          headers,
-        }
-      );
+        const response = await axios.post<TokenResponse>(
+          import.meta.env.VITE_SPOTIFY_TOKEN_URL,
+          body,
+          {
+            headers,
+          }
+        );
 
-      authStore.setToken(response.data.access_token);
-      authStore.setRefreshToken(response.data.refresh_token);
-    } catch (err) {
-      navigate('/login');
-    } finally {
-      authStore.setIsLoading(false);
-    }
-  };
+        authStore.setToken(response.data.access_token);
+      } catch (err) {
+        navigate('/login');
+      } finally {
+        authStore.setIsLoading(false);
+      }
+    },
+    [navigate]
+  );
 
   const refreshToken = useCallback(
     async (refreshToken: string | null) => {
@@ -100,7 +102,6 @@ export const useAuth = (): UseAuthenticationData => {
         );
 
         authStore.setToken(response.data.access_token);
-        authStore.setRefreshToken(response.data.refresh_token);
       } catch (err) {
         navigate('/login');
       }

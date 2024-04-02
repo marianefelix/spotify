@@ -17,7 +17,7 @@ export const User = observer(() => {
   return (
     <Layout>
       <S.MainContent>
-        <img src={userStore.data?.avatarURL} alt="Sua imagem de perfil" />
+        <img src={userStore.data?.avatarURL} alt="Sua foto de perfil" />
         <S.Name>{userStore.data?.display_name}</S.Name>
         <PrimaryButton onClick={handleLogout}>Sair</PrimaryButton>
       </S.MainContent>

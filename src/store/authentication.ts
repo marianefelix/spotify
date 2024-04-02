@@ -3,20 +3,18 @@ import { makePersistable } from 'mobx-persist-store';
 
 interface AuthenticationStoreI {
   token: string;
-  refreshToken: string;
   isLoading: boolean;
 }
 
 export class AuthenticationStore implements AuthenticationStoreI {
   token = '';
-  refreshToken = '';
   isLoading = false;
 
   constructor() {
     makeAutoObservable(this);
     makePersistable(this, {
       name: 'AuthStore',
-      properties: ['token', 'refreshToken'],
+      properties: ['token'],
       storage: window.localStorage,
     });
   }
@@ -41,20 +39,6 @@ export class AuthenticationStore implements AuthenticationStoreI {
 
     if (authStore !== null) {
       return authStore.token;
-    }
-
-    return null;
-  }
-
-  setRefreshToken(refreshToken: string) {
-    this.refreshToken = refreshToken;
-  }
-
-  getRefreshToken() {
-    const authStore = this.getAuthStore();
-
-    if (authStore !== null) {
-      return authStore.refreshToken;
     }
 
     return null;

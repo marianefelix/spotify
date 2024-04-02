@@ -1,10 +1,16 @@
 import styled from 'styled-components';
 
 export const Header = styled.header`
-  display: grid;
-  grid-gap: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
   padding-bottom: 32px;
+`;
+
+export const TextBox = styled.div`
+  display: grid;
+  grid-gap: 8px;
 `;
 
 export const Title = styled.h2`

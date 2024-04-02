@@ -11,6 +11,8 @@ import { Main } from '../../components/Layout/Main';
 import { PlaylistModal } from './Modal';
 import { useCreate } from '../../hooks/create';
 import { Bounce, toast } from 'react-toastify';
+import { Pagination } from '../../components/Pagination';
+import { Paginated, usePagination } from '../../hooks/pagination';
 
 interface PlaylistItemResponse {
   id: string;
@@ -22,13 +24,15 @@ interface PlaylistItemResponse {
     | null;
   name: string;
 }
-interface PlaylistsResponse {
+interface PlaylistsResponse extends Paginated {
   items: PlaylistItemResponse[];
 }
 
 export const Playlists = observer(() => {
   const { fetchData } = useFetch();
   const { create, isLoading: isCreatingPlaylist } = useCreate();
+  const { offset, totalPages, currentPage, handleChangePage, handleSetTotalPages, DEFAULT_LIMIT } =
+    usePagination();
 
   const [isPlaylistModalOpen, setIsPlaylistModalOpen] = useState(false);
   const [modalInputValue, setModalInputValue] = useState('');
@@ -50,15 +54,21 @@ export const Playlists = observer(() => {
 
   useEffect(() => {
     const handleFetchPlaylists = async () => {
-      const { response } = await fetchData<PlaylistsResponse>(`/me/playlists`);
+      const { response } = await fetchData<PlaylistsResponse>(`/me/playlists`, {
+        params: {
+          offset,
+          limit: DEFAULT_LIMIT,
+        },
+      });
 
       if (response !== null) {
+        handleSetTotalPages(response.data.total);
         userStore.setPlaylists(getParsedPlaylistData(response.data));
       }
     };
 
     handleFetchPlaylists();
-  }, [fetchData, getParsedPlaylistData]);
+  }, [fetchData, getParsedPlaylistData, DEFAULT_LIMIT, handleSetTotalPages, offset]);
 
   const handlePlaylistModalOpen = (value: boolean) => {
     setIsPlaylistModalOpen(value);
@@ -132,6 +142,11 @@ export const Playlists = observer(() => {
         handleInputOnChange={handleModalInputChange}
         handleCreatePlaylist={handleCreatePlaylist}
         isLoading={isCreatingPlaylist}
+      />
+      <Pagination
+        totalPages={totalPages}
+        currentPage={currentPage}
+        handleChangePage={handleChangePage}
       />
     </Layout>
   );

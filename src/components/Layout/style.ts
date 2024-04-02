@@ -8,6 +8,9 @@ export const Container = styled.div`
 `;
 
 export const AsideBox = styled.aside`
+  display: flex;
+  flex-direction: column;
+
   width: calc(100vw - 250px);
   padding: 32px;
 

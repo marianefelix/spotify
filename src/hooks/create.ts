@@ -1,20 +1,20 @@
-import { useCallback, useState } from 'react';
+import { useNavigate } from 'react-router';
 import api from '../services/api';
-import { authStore } from '../store/authentication';
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useCallback, useState } from 'react';
+import { authStore } from '../store/authentication';
 
 interface Error {
   status: number;
   message: string;
 }
 
-const useFetch = () => {
-  const [isLoading, setIsLoading] = useState(true);
+export const useCreate = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const fetchData = useCallback(
-    async <T>(url: string, options?: AxiosRequestConfig) => {
+  const create = useCallback(
+    async <T>(url: string, data?: any, options?: AxiosRequestConfig) => {
       setIsLoading(true);
       let response = null as AxiosResponse<T, unknown> | null;
       let error = null as Error | null;
@@ -34,8 +34,10 @@ const useFetch = () => {
           (error) => Promise.reject(error)
         );
 
-        response = await api.get<T>(url, options);
+        response = await api.post<T>(url, data, options);
       } catch (err) {
+        setIsLoading(false);
+
         const errorResponse = err as {
           response: Error;
         };
@@ -46,16 +48,14 @@ const useFetch = () => {
           authStore.clearAll();
           navigate('/login');
         }
+      } finally {
+        setIsLoading(false);
       }
-
-      setIsLoading(false);
 
       return { response, error };
     },
     [navigate]
   );
 
-  return { fetchData, isLoading };
+  return { create, isLoading };
 };
-
-export default useFetch;

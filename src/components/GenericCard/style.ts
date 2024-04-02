@@ -31,9 +31,31 @@ export const Description = styled.p`
   line-height: 20px;
 
   opacity: 0.8;
+
+  max-width: 35ch;
+
+  white-space: nowrap;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  text-overflow: ellipsis;
+
+  a {
+    color: ${({ theme }) => theme.color.primary};
+  }
 `;
 
 export const TextBox = styled.div`
   display: flex;
   flex-direction: column;
+`;
+
+export const DefaultImage = styled.div`
+  width: 72px;
+  height: 72px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: ${({ theme }) => theme.color.gray['800']};
 `;

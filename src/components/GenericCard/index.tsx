@@ -1,3 +1,5 @@
+import parse from 'html-react-parser';
+import { MusicIcon } from '../icons/Music';
 import * as S from './style';
 
 interface GenericCardProps {
@@ -9,12 +11,20 @@ interface GenericCardProps {
 }
 
 export const GenericCard = ({ id, imageURL, imageAlt, title, description }: GenericCardProps) => {
+  const parsedDescription = parse(description);
+
   return (
     <S.Container data-testid={id}>
-      <img src={imageURL} alt={imageAlt} />
+      {imageURL === '' ? (
+        <S.DefaultImage>
+          <MusicIcon />
+        </S.DefaultImage>
+      ) : (
+        <img src={imageURL} alt={imageAlt} />
+      )}
       <S.TextBox>
         <S.Title>{title}</S.Title>
-        <S.Description>{description}</S.Description>
+        <S.Description>{parsedDescription}</S.Description>
       </S.TextBox>
     </S.Container>
   );

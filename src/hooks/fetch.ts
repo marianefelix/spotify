@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 import api from '../services/api';
 import { authStore } from '../store/authentication';
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { redirect } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 interface Error {
   status: number;
@@ -11,6 +11,7 @@ interface Error {
 
 const useFetch = () => {
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
 
   const fetchData = useCallback(async <T>(url: string, options?: AxiosRequestConfig) => {
     setIsLoading(true);
@@ -42,7 +43,7 @@ const useFetch = () => {
 
       if (error.status === 401) {
         authStore.clearAll();
-        redirect('/login');
+        navigate('/login');
       }
     }
 

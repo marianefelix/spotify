@@ -65,7 +65,7 @@ export class AuthenticationStore implements AuthenticationStoreI {
   }
 
   getAuthenticated() {
-    if (this.getToken() !== '') {
+    if (this.getToken() !== null && this.getToken() !== '') {
       return true;
     }
 

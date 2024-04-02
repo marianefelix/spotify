@@ -10,16 +10,36 @@ import { useFetchArtists } from '../../hooks/fetchArtists';
 import { getCurrentTime } from '../../utils/currentTime';
 import { Artist } from '../../models/artist';
 
+interface UserResponse {
+  id: string;
+  images: {
+    url: string;
+  }[];
+  display_name: string;
+  email: string;
+}
+
 export const Home = observer(() => {
   const { fetchData } = useFetch();
   const { fetchTopArtits } = useFetchArtists();
 
+  const getUserDataParsed = (data: UserResponse) => {
+    const userData = {
+      id: data.id,
+      display_name: data.display_name,
+      email: data.email,
+      avatarURL: data.images[1].url,
+    } as User;
+
+    return userData;
+  };
+
   useEffect(() => {
     const handleFetchUserData = async () => {
-      const { response, error } = await fetchData<User>('/me');
+      const { response, error } = await fetchData<UserResponse>('/me');
 
       if (response !== null) {
-        userStore.setUserData(response.data);
+        userStore.setUserData(getUserDataParsed(response.data));
         return;
       }
     };

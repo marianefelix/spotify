@@ -7,6 +7,7 @@ import { CustomRoute } from './CutomLoginRoute/inde';
 import { Artists } from '../pages/Artists';
 import { ArtistDetails } from '../pages/Artists/ArtistDetails';
 import { User } from '../pages/User';
+import { Playlists } from '../pages/Playlists';
 
 export const router = createBrowserRouter([
   {
@@ -51,6 +52,14 @@ export const router = createBrowserRouter([
     element: (
       <PrivateRoute>
         <User />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: '/playlists',
+    element: (
+      <PrivateRoute>
+        <Playlists />
       </PrivateRoute>
     ),
   },

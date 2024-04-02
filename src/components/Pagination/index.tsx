@@ -7,8 +7,6 @@ interface PaginationProps {
 }
 
 export const Pagination = ({ totalPages, currentPage, handleChangePage }: PaginationProps) => {
-  // const { totalPages, currentPage, handleChangePage } = usePagination();
-
   const numbers = [...Array(totalPages + 1).keys()];
   const pageNumbers = numbers.slice(1);
 

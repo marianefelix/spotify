@@ -1,11 +1,11 @@
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { Artist } from '../models/artist';
-import { userStore } from '../store/user';
 import useFetch from './fetch';
 import { Bounce, toast } from 'react-toastify';
+import { AxiosRequestConfig } from 'axios';
+import { Paginated } from './pagination';
 
-interface TopArtistsResponse {
-  next: string | null;
+interface TopArtistsResponse extends Paginated {
   items: [
     {
       id: string;
@@ -24,16 +24,12 @@ export const useFetchArtists = () => {
   const { fetchData, isLoading } = useFetch();
 
   const fetchTopArtits = useCallback(
-    async (limit: number, setData: (data: Artist[]) => void) => {
-      const params = {
-        limit,
-        // offset: 0,
-        time_range: 'short_term',
-      };
-
-      const { response, error } = await fetchData<TopArtistsResponse>('/me/top/artists', {
-        params,
-      });
+    async (
+      setData: (data: Artist[]) => void,
+      handleSetTotalPages?: (totalResults: number) => void,
+      options?: AxiosRequestConfig
+    ) => {
+      const { response, error } = await fetchData<TopArtistsResponse>('/me/top/artists', options);
 
       if (response !== null) {
         const topArtits = [] as Artist[];
@@ -46,6 +42,10 @@ export const useFetchArtists = () => {
             genres: item.genres,
           });
         });
+
+        if (handleSetTotalPages) {
+          handleSetTotalPages(response.data.total);
+        }
 
         setData(topArtits);
       }

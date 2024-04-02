@@ -36,7 +36,7 @@ export const Home = observer(() => {
 
   useEffect(() => {
     const handleFetchUserData = async () => {
-      const { response, error } = await fetchData<UserResponse>('/me');
+      const { response } = await fetchData<UserResponse>('/me');
 
       if (response !== null) {
         userStore.setUserData(getUserDataParsed(response.data));
@@ -45,12 +45,22 @@ export const Home = observer(() => {
     };
 
     handleFetchUserData();
-    fetchTopArtits(5, (data: Artist[]) => userStore.setTopArtits(data));
+    const setData = (data: Artist[]) => {
+      userStore.setTopArtits(data);
+    };
+
+    fetchTopArtits(setData, undefined, {
+      params: {
+        limit: 5,
+      },
+    });
   }, [fetchData, fetchTopArtits]);
 
   const getTopFiveArtists = () => {
-    if (userStore.topArtits !== null) {
-      const topFiveArtists = userStore.topArtits.slice(0, 5);
+    const topArtists = userStore.getTopArtits();
+
+    if (topArtists !== null) {
+      const topFiveArtists = topArtists.slice(0, topArtists.length);
       return topFiveArtists;
     }
 

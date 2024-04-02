@@ -46,9 +46,9 @@ const useFetch = () => {
           authStore.clearAll();
           navigate('/login');
         }
+      } finally {
+        setIsLoading(false);
       }
-
-      setIsLoading(false);
 
       return { response, error };
     },

@@ -9,7 +9,7 @@ export const Container = styled.div`
 `;
 
 export const Loader = styled.div`
-  border: 6px solid #f3f3f3;
+  border: 6px solid ${({ theme }) => theme.color.gray['300']};
   border-top: 6px solid ${({ theme }) => theme.color.primary};
   border-radius: 50%;
   width: 60px;

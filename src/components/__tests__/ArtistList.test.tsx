@@ -2,6 +2,9 @@ import { describe, it, expect } from 'vitest';
 import { render, screen } from '../../utils/test';
 import { Artist } from '../../models/artist';
 import { ArtistList } from '../Artist/List';
+import { BrowserRouter } from 'react-router-dom';
+
+const wrapper = { wrapper: BrowserRouter };
 
 describe('<ArtistCard />', () => {
   const artistList: Artist[] = [
@@ -20,7 +23,7 @@ describe('<ArtistCard />', () => {
   ];
 
   it('Should render no artist list', () => {
-    render(<ArtistList />);
+    render(<ArtistList />, wrapper);
 
     const artistListElement = screen.getByTestId('artist-list');
 
@@ -28,7 +31,7 @@ describe('<ArtistCard />', () => {
   });
 
   it('Should render a list of 2 artists', () => {
-    render(<ArtistList artists={artistList} />);
+    render(<ArtistList artists={artistList} />, wrapper);
 
     const artistListElement = screen.getByTestId('artist-list');
 
@@ -42,7 +45,7 @@ describe('<ArtistCard />', () => {
     };
     artistList.push(newItem);
 
-    render(<ArtistList artists={artistList} />);
+    render(<ArtistList artists={artistList} />, wrapper);
 
     const artistListElement = screen.getByTestId('artist-list');
 

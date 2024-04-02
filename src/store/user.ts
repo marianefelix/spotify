@@ -6,7 +6,7 @@ import { ArtistAlbum } from '../models/artistAlbum';
 import { Playlist } from '../models/playlist';
 
 export class UserStore {
-  data = {} as User | null;
+  data = null as User | null;
   topArtits = [] as Artist[];
   allArtits = [] as Artist[];
   artistAlbums = [] as ArtistAlbum[];
@@ -16,7 +16,7 @@ export class UserStore {
     makeAutoObservable(this);
     makePersistable(this, {
       name: 'UserStore',
-      properties: ['data', 'topArtits', 'allArtits'],
+      properties: ['data', 'topArtits', 'allArtits', 'artistAlbums', 'playlists'],
       storage: window.localStorage,
     });
   }

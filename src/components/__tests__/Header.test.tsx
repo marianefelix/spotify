@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '../../utils/test';
-import { Header } from '../../components/Layout/Header';
+import { Header } from '../Layout/Header';
 import { getByText } from '@testing-library/dom';
 
 describe('<Header />', () => {
@@ -24,6 +24,6 @@ describe('<Header />', () => {
     const headerElement = screen.getByTestId('app-header');
     const descriptionElement = headerElement.querySelector('p');
 
-    expect(descriptionElement.textContent).toContain('descrição');
+    expect(descriptionElement!.textContent).toContain('descrição');
   });
 });

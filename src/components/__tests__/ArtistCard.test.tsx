@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { render, screen } from '../../utils/test';
 import { ArtistCard } from '../Artist/Card';
 import { Artist } from '../../models/artist';
+import { BrowserRouter } from 'react-router-dom';
 
 const props = {
   id: 'DPR IAN',
@@ -11,7 +12,7 @@ const props = {
 } as Artist;
 
 beforeEach(() => {
-  render(<ArtistCard {...props} />);
+  render(<ArtistCard {...props} />, { wrapper: BrowserRouter });
 });
 
 describe('<ArtistCard />', () => {

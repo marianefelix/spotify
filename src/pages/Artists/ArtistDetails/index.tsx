@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { Fragment, useCallback, useEffect } from 'react';
 import { Layout } from '../../../components/Layout';
 import { ArrowLeftIcon } from '../../../components/icons/Arrow/Left';
 import * as S from './style';
@@ -7,12 +7,14 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { observer } from 'mobx-react';
 import { userStore } from '../../../store/user';
 import { ArtistAlbum } from '../../../models/artistAlbum';
-import { Artist } from '../../../models/artist';
 import { formatDate } from '../../../utils/formatDate';
 import { GenericCard } from '../../../components/GenericCard';
 import { Main } from '../../../components/Layout/Main';
+import { Paginated, usePagination } from '../../../hooks/pagination';
+import { Pagination } from '../../../components/Pagination';
+import { LoadingSpinner } from '../../../components/LoadingSpinner';
 
-interface ArtistAlbumsResponse {
+interface ArtistAlbumsResponse extends Paginated {
   items: {
     id: string;
     images: {
@@ -25,9 +27,14 @@ interface ArtistAlbumsResponse {
 
 export const ArtistDetails = observer(() => {
   const artist = useParams();
-  const { fetchData } = useFetch();
+  const { fetchData, isLoading } = useFetch();
+  const { offset, totalPages, currentPage, handleChangePage, handleSetTotalPages, DEFAULT_LIMIT } =
+    usePagination();
   const navigate = useNavigate();
-  const [artistData, setArtistData] = useState<Artist | null>(null);
+
+  const artistData = userStore
+    .getAllArtists()
+    .filter((artistItem) => artistItem.id === artist.id)[0];
 
   const getParsedAlbumsData = useCallback((data: ArtistAlbumsResponse) => {
     const albums = [] as ArtistAlbum[];
@@ -46,23 +53,24 @@ export const ArtistDetails = observer(() => {
 
   useEffect(() => {
     const handleFetchArtistAlbums = async () => {
-      const { response } = await fetchData<ArtistAlbumsResponse>(`/artists/${artist.id}/albums`);
+      const params = {
+        offset,
+        limit: DEFAULT_LIMIT,
+        include_groups: 'album,single,compilation',
+      };
+
+      const { response } = await fetchData<ArtistAlbumsResponse>(`/artists/${artist.id}/albums`, {
+        params,
+      });
 
       if (response !== null) {
+        handleSetTotalPages(response.data.total);
         userStore.setArtistAlbums(getParsedAlbumsData(response.data));
       }
     };
 
     handleFetchArtistAlbums();
-  }, [artist, fetchData, getParsedAlbumsData]);
-
-  useEffect(() => {
-    const artistData = userStore
-      .getAllArtists()
-      .filter((artistItem) => artistItem.id === artist.id)[0];
-
-    setArtistData(artistData);
-  }, [artist]);
+  }, [artist, fetchData, getParsedAlbumsData, handleSetTotalPages, DEFAULT_LIMIT, offset]);
 
   const handleBackButtonOnClik = () => {
     navigate('/artists');
@@ -83,18 +91,29 @@ export const ArtistDetails = observer(() => {
           alt={`Imagem do artista ${artistData?.name}`}
         />
       </S.Header>
-      <Main>
-        {userStore.artistAlbums.map((album) => (
-          <GenericCard
-            key={album.id}
-            id={album.id}
-            title={album.name}
-            imageURL={album.imageURL}
-            imageAlt="Capa do álbum"
-            description={album.releaseDate}
+      {isLoading ? (
+        <LoadingSpinner />
+      ) : (
+        <Fragment>
+          <Main id="artist-details-main">
+            {userStore.getArtistAlbums().map((album) => (
+              <GenericCard
+                key={album.id}
+                id={album.id}
+                title={album.name}
+                imageURL={album.imageURL}
+                imageAlt="Capa do álbum"
+                description={album.releaseDate}
+              />
+            ))}
+          </Main>
+          <Pagination
+            totalPages={totalPages}
+            currentPage={currentPage}
+            handleChangePage={handleChangePage}
           />
-        ))}
-      </Main>
+        </Fragment>
+      )}
     </Layout>
   );
 });

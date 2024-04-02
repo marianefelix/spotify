@@ -16,7 +16,7 @@ export const GenericCard = ({ id, imageURL, imageAlt, title, description }: Gene
   return (
     <S.Container data-testid={id}>
       {imageURL === '' ? (
-        <S.DefaultImage>
+        <S.DefaultImage data-testid="default-image-box">
           <MusicIcon />
         </S.DefaultImage>
       ) : (

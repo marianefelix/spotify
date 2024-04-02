@@ -9,6 +9,7 @@ import { ArtistList } from '../../components/Artist/List';
 import { useFetchArtists } from '../../hooks/fetchArtists';
 import { getCurrentTime } from '../../utils/currentTime';
 import { Artist } from '../../models/artist';
+import { LoadingSpinner } from '../../components/LoadingSpinner';
 
 interface UserResponse {
   id: string;
@@ -20,8 +21,8 @@ interface UserResponse {
 }
 
 export const Home = observer(() => {
-  const { fetchData } = useFetch();
-  const { fetchTopArtits } = useFetchArtists();
+  const { fetchData, isLoading: fetchingUserData } = useFetch();
+  const { fetchTopArtits, isLoading: fetchingTopArtists } = useFetchArtists();
 
   const getUserDataParsed = (data: UserResponse) => {
     const userData = {
@@ -36,7 +37,7 @@ export const Home = observer(() => {
 
   useEffect(() => {
     const handleFetchUserData = async () => {
-      const { response, error } = await fetchData<UserResponse>('/me');
+      const { response } = await fetchData<UserResponse>('/me');
 
       if (response !== null) {
         userStore.setUserData(getUserDataParsed(response.data));
@@ -45,12 +46,22 @@ export const Home = observer(() => {
     };
 
     handleFetchUserData();
-    fetchTopArtits(5, (data: Artist[]) => userStore.setTopArtits(data));
+    const setData = (data: Artist[]) => {
+      userStore.setTopArtits(data);
+    };
+
+    fetchTopArtits(setData, undefined, {
+      params: {
+        limit: 5,
+      },
+    });
   }, [fetchData, fetchTopArtits]);
 
   const getTopFiveArtists = () => {
-    if (userStore.topArtits !== null) {
-      const topFiveArtists = userStore.topArtits.slice(0, 5);
+    const topArtists = userStore.getTopArtits();
+
+    if (topArtists !== null) {
+      const topFiveArtists = topArtists.slice(0, topArtists.length);
       return topFiveArtists;
     }
 
@@ -67,7 +78,11 @@ export const Home = observer(() => {
         title={getTitle()}
         description="Seu top 5 artistas mais ouvidos nas últimas semanas"
       />
-      <ArtistList artists={getTopFiveArtists()} />
+      {fetchingUserData || fetchingTopArtists ? (
+        <LoadingSpinner />
+      ) : (
+        <ArtistList artists={getTopFiveArtists()} />
+      )}
     </Layout>
   );
 });

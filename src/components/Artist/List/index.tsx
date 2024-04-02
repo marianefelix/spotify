@@ -8,7 +8,7 @@ interface ArtistListProps {
 
 export const ArtistList = ({ artists }: ArtistListProps) => {
   return (
-    <Main data-testid="artist-list">
+    <Main id="artist-list">
       {artists?.map((artistItem) => (
         <ArtistCard
           key={artistItem.id}

@@ -11,6 +11,7 @@ export const User = observer(() => {
 
   const handleLogout = () => {
     authStore.clearAll();
+    userStore.clearAll();
     navigate('/login');
   };
 

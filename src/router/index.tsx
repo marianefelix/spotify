@@ -9,58 +9,61 @@ import { ArtistDetails } from '../pages/Artists/ArtistDetails';
 import { User } from '../pages/User';
 import { Playlists } from '../pages/Playlists';
 
-export const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <Authenticator />,
-  },
-  {
-    path: '/login',
+export const router = createBrowserRouter(
+  [
+    {
+      path: '/',
+      element: <Authenticator />,
+    },
+    {
+      path: '/login',
 
-    element: (
-      <CustomRoute>
-        <Login />
-      </CustomRoute>
-    ),
-  },
-  {
-    path: '/home',
-    element: (
-      <PrivateRoute>
-        <Home />
-      </PrivateRoute>
-    ),
-  },
-  {
-    path: '/artists',
-    element: (
-      <PrivateRoute>
-        <Artists />
-      </PrivateRoute>
-    ),
-  },
-  {
-    path: '/artists/:id',
-    element: (
-      <PrivateRoute>
-        <ArtistDetails />
-      </PrivateRoute>
-    ),
-  },
-  {
-    path: '/user',
-    element: (
-      <PrivateRoute>
-        <User />
-      </PrivateRoute>
-    ),
-  },
-  {
-    path: '/playlists',
-    element: (
-      <PrivateRoute>
-        <Playlists />
-      </PrivateRoute>
-    ),
-  },
-]);
+      element: (
+        <CustomRoute>
+          <Login />
+        </CustomRoute>
+      ),
+    },
+    {
+      path: '/home',
+      element: (
+        <PrivateRoute>
+          <Home />
+        </PrivateRoute>
+      ),
+    },
+    {
+      path: '/artists',
+      element: (
+        <PrivateRoute>
+          <Artists />
+        </PrivateRoute>
+      ),
+    },
+    {
+      path: '/artists/:id',
+      element: (
+        <PrivateRoute>
+          <ArtistDetails />
+        </PrivateRoute>
+      ),
+    },
+    {
+      path: '/user',
+      element: (
+        <PrivateRoute>
+          <User />
+        </PrivateRoute>
+      ),
+    },
+    {
+      path: '/playlists',
+      element: (
+        <PrivateRoute>
+          <Playlists />
+        </PrivateRoute>
+      ),
+    },
+  ],
+  { basename: import.meta.env.VITE_BASE_PATH }
+);

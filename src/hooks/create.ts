@@ -3,6 +3,7 @@ import api from '../services/api';
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { useCallback, useState } from 'react';
 import { authStore } from '../store/authentication';
+import { userStore } from '../store/user';
 
 interface Error {
   status: number;
@@ -46,6 +47,7 @@ export const useCreate = () => {
 
         if (error.status === 401) {
           authStore.clearAll();
+          userStore.clearAll();
           navigate('/login');
         }
       } finally {

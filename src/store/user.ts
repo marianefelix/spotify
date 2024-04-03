@@ -60,6 +60,10 @@ export class UserStore {
   getPlaylists() {
     return this.playlists;
   }
+
+  clearAll() {
+    localStorage.removeItem('UserStore');
+  }
 }
 
 export const userStore = new UserStore();

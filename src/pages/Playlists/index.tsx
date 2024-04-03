@@ -80,7 +80,31 @@ export const Playlists = observer(() => {
     setModalInputValue(value);
   };
 
+  const inputValueIsValid = () => {
+    if (modalInputValue.trim() === '') {
+      toast.error('O nome da playlist é obrigatório.', {
+        position: 'bottom-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+        transition: Bounce,
+      });
+
+      return false;
+    }
+
+    return true;
+  };
+
   const handleCreatePlaylist = async () => {
+    if (!inputValueIsValid()) {
+      return;
+    }
+
     const { response } = await create<PlaylistItemResponse>(
       `/users/${userStore.data?.id}/playlists`,
       {

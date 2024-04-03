@@ -50,7 +50,7 @@ export const useFetchArtists = () => {
         setData(topArtits);
       }
 
-      if (error !== null) {
+      if (error !== null && error.status !== 401) {
         toast.error(
           'Erro ao carregar seus artistas favoritos. Recarregue a página e tente novamente!',
           {

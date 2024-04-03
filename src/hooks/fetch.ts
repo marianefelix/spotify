@@ -3,6 +3,7 @@ import api from '../services/api';
 import { authStore } from '../store/authentication';
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { userStore } from '../store/user';
 
 interface Error {
   status: number;
@@ -44,6 +45,7 @@ const useFetch = () => {
 
         if (error.status === 401) {
           authStore.clearAll();
+          userStore.clearAll();
           navigate('/login');
         }
       } finally {
